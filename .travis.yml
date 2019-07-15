@@ -11,3 +11,13 @@ install: "pip install -r requirements.txt"
 
 script: pytest --cov=./Yves-Saint-Laurent ./tests
 
+deploy:
+  - provider: script
+    script: bash ./docker-deploy.sh master
+    on:
+      branch: master
+
+  - provider: script
+    script: bash ./codker-deploy.sh dev
+    on:
+      branch: dev
