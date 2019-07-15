@@ -18,7 +18,7 @@ def create_vault_client():
 
 
 def db_credential_url(env):
-    env = 'prod' if (env == 'production') else 'test'
+    env = 'prod' if env == 'production' else 'test'
     return VAULT_DB_URL.format(env=env)
 
 
