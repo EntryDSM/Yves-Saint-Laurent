@@ -14,9 +14,7 @@ install:
   - pip install codecov
 
 script:
-  - pytest --cov=./Yves-Saint-Laurent ./tests
-  - coverage xml -i
-  - sonar-scanner
+  - pytest --cov=./ysl ./tests
 
 after_success:
   - codecov
