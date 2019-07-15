@@ -14,7 +14,7 @@ install:
   - pip install codecov
 
 script:
-  - pytest
+  - pytest --cov=./Yves-Saint-Laurent ./tests
 
 after_success:
   - codecov
