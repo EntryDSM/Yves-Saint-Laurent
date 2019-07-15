@@ -9,7 +9,13 @@ VAULT_DB_URL = 'database/creds/yves-saint-laurent-{env}'
 def create_vault_client():
     client = hvac.Client(url=VAULT_URL)
 
-    client.auth.github.login(token=os.environ.get("GITHUB_TOKEN"))
+    try:
+        if os.environ.get("VAULT_TOKEN"):
+            client.token(os.environ.get("VAULT_TOKEN"))
+        elif os.environ.get("GITHUB_TOKEN"):
+            client.auth.github.login(token=os.environ.get("GITHUB_TOKEN"))
+    except ValueError:
+        print("No token")
 
     return client
 
@@ -19,6 +25,11 @@ def get_db_credential_url(env):
     return VAULT_DB_URL.format(env=env)
 
 
+def get_vault_secret_url(env):
+    env = 'prod' if env == 'production' else 'test'
+    return VAULT_SECRET_CONFIG_URL.format(env=env)
+
+
 def get_config(env):
     client = create_vault_client()
 
@@ -26,8 +37,10 @@ def get_config(env):
 
     config = {
         'env': env,
-        'DATABASE_USERNAME': database_credential.values(),
-        'DATABASE_PASSWORD': database_credential.values()
+        'DATABASE_USERNAME': database_credential.get('username'),
+        'DATABASE_PASSWORD': database_credential.get('password')
     }
+
+    config.update(**client.read(get_vault_secret_url(env=env))['data'])
 
     return config
