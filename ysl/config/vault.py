@@ -37,7 +37,7 @@ def get_vault_secret_url(env):
 
 
 @tl.job(timedelta(hours=1))
-def get_database_config(env='test'):
+def get_database_config(env=os.getenv('env')):
     client = create_vault_client()
 
     database_credential = client.read(get_db_credential_url(env=env))['data']
@@ -52,5 +52,3 @@ def get_database_config(env='test'):
 
     return config
 
-
-tl.start(block=True)

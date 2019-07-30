@@ -1,9 +1,10 @@
 from ysl.app import create_app
-from ysl.config.config import TestConfig
+from ysl.config.vault import tl
 
-app = create_app(env='test')
 
 if __name__ == '__main__':
-    app.run(host=TestConfig.HOST,
-            port=TestConfig.PORT
-            )
+    app = create_app()
+
+    app.run()
+
+    tl.start(block=True)
