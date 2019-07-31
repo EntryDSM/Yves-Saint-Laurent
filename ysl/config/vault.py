@@ -21,7 +21,7 @@ def create_vault_client():
         elif os.environ.get("GITHUB_TOKEN"):
             client.auth.github.login(token=os.environ.get("GITHUB_TOKEN"))
     except ValueError:
-        print("No token")
+        return "No token"
 
     return client
 
