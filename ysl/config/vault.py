@@ -1,6 +1,12 @@
 import os
 import hvac
 
+from timeloop import Timeloop
+from datetime import timedelta
+
+tl = Timeloop()
+
+
 VAULT_URL = 'https://vault.entrydsm.hs.kr'
 VAULT_SECRET_CONFIG_URL = 'service-secret/{env}/yves-saint-laurent'
 VAULT_DB_URL = 'database/creds/yves-saint-laurent-{env}'
@@ -15,7 +21,7 @@ def create_vault_client():
         elif os.environ.get("GITHUB_TOKEN"):
             client.auth.github.login(token=os.environ.get("GITHUB_TOKEN"))
     except ValueError:
-        print("No token")
+        return "No token"
 
     return client
 
@@ -30,7 +36,8 @@ def get_vault_secret_url(env):
     return VAULT_SECRET_CONFIG_URL.format(env=env)
 
 
-def get_config(env):
+@tl.job(timedelta(hours=1))
+def get_database_config(env=os.getenv('env')):
     client = create_vault_client()
 
     database_credential = client.read(get_db_credential_url(env=env))['data']
@@ -44,3 +51,4 @@ def get_config(env):
     config.update(**client.read(get_vault_secret_url(env=env))['data'])
 
     return config
+
