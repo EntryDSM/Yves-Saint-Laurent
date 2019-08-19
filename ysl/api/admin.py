@@ -32,6 +32,17 @@ class Agency(Resource):
 
         return Response({"msg": "successful agency delete"}, 200)
 
+    def patch(self):
+        agency_code = request.view_args['agency_code']
+        explanation = request.json['explanation']
+
+        agency = Agency.query.filter_by(code=agency_code).first()
+        agency.explanation = explanation
+
+        db.session.commit()
+
+        return Response({"msg": "successful change agency explanation"}, 200)
+
 
 class Interviewer(Resource):
     def get(self):
@@ -46,5 +57,5 @@ class Interviewer(Resource):
         })
 
 
-api_admin.add_resource(Agency, "/<agency_code>")
+api_admin.add_resource(Agency, "/agency/<agency_code>")
 api_admin.add_resource(Interviewer, "/<agency_code>/interviewer")
