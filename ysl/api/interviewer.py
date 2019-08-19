@@ -23,7 +23,7 @@ class AcceptInterviewer(Resource):
 
         db.session.commit()
 
-        return Resource({"msg": "Successful interviewer accept"}, 200)
+        return Response({"msg": "Successful interviewer accept"}, 200)
 
 
 class RejectInterviewer(Resource):
@@ -39,7 +39,7 @@ class RejectInterviewer(Resource):
 
         db.session.commit()
 
-        return Resource({"msg": "Successful interviewer reject"}, 200)
+        return Response({"msg": "Successful interviewer reject"}, 200)
 
 
 api_admin.add_resource(AcceptInterviewer, "/<agency_code>/interviewer/accept")
