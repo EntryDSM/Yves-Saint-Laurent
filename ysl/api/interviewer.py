@@ -5,9 +5,12 @@ from ysl.db.belong import Belong
 from ysl.db.apply_interviewer import ApplyInterviewer
 from ysl.db import db
 from ysl.api.admin import api_admin
+from ysl.api import check_admin, check_json
 
 
 class AcceptInterviewer(Resource):
+    @check_admin()
+    @check_json()
     def post(self):
         agency_code = request.view_args['agency_code']
         interviewer = request.json['user_email']
@@ -27,6 +30,8 @@ class AcceptInterviewer(Resource):
 
 
 class RejectInterviewer(Resource):
+    @check_admin()
+    @check_json()
     def post(self):
         agency_code = request.view_args['agency_code']
         interviewer = request.json['user_email']

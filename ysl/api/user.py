@@ -13,8 +13,13 @@ class AgencyCode(Resource):
 
         agency = Agency.query.filter_by(code=agency_code).first()
 
-        return Response({"agency_name": agency.name,
-                         "agency_code": agency.explanation}, 200)
+        if agency:
+            return Response({"agency_name": agency.name,
+                             "agency_explanation": agency.explanation}, 200)
+        else:
+            return Resource({
+                "msg": "unseen agency"
+            })
 
 
 api_agency.add_resource(Agency, "/check")
