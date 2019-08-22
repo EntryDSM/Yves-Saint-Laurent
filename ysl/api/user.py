@@ -22,4 +22,4 @@ class AgencyCode(Resource):
             })
 
 
-api_agency.add_resource(Agency, "/check")
+api_agency.add_resource(AgencyCode, "/check")
