@@ -1,8 +1,10 @@
-from ysl.db import db
+from sqlalchemy import Column, String, ForeignKey
+
+from ysl.db import Base
 
 
-class Belong(db.Model):
+class Belong(Base):
     __tablename__ = 'BELOGN_TB'
 
-    agency = db.Column(db.String(20), db.ForeignKey("AGENCY_TB.code"), primary_key=True)
-    interviewer = db.Column(db.String(50), db.ForeignKey("INTERVIEWER_TB.email"), primary_key=True)
+    agency = Column(String(20), ForeignKey("AGENCY_TB.code"), primary_key=True)
+    interviewer = Column(String(50), ForeignKey("INTERVIEWER_TB.email"), primary_key=True)

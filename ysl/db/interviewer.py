@@ -1,9 +1,11 @@
-from ysl.db import db
+from sqlalchemy import Column, String
+
+from ysl.db import Base
 
 
-class Interviewer(db.Model):
+class Interviewer(Base):
     __tablename__ = 'INTERVIEWER_TB'
 
-    email = db.Column(db.String(50), primary_key=True)
-    pw = db.Column(db.String(50), nullable=True)
-    name = db.Column(db.String(50), nullable=True)
+    email = Column(String(50), primary_key=True)
+    pw = Column(String(50), nullable=True)
+    name = Column(String(50), nullable=True)
