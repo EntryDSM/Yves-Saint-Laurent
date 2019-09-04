@@ -1,67 +1,60 @@
-from flask import Blueprint, request, Response
+from flask import Blueprint, request, abort
 from flask_restful import Resource, Api
+from flask_jwt_extended import create_access_token, create_refresh_token
+from secrets import token_hex
 
 from ysl.db.agency import Agency
-from ysl.db.apply_interviewer import ApplyInterviewer
-from ysl.db import db
-from ysl.api import check_admin, check_json
+from ysl.db import session
+from ysl.api import check_json
 
-bp_admin = Blueprint("admin", __name__, url_prefix="/api/admin")
+bp_admin = Blueprint("admin", __name__, url_prefix="/api/v1/admin")
 api_admin = Api(bp_admin)
 
 
-class AgencyInformation(Resource):
-    @check_admin()
-    def get(self):
-        agency_code = request.view_args['agency_code']
+#이메일인증 추가예정
+class AdminSignup(Resource):
+    @check_json({
+        "agency_name": str,
+        "agency_kind": str,
+        "email": str,
+        "password": str,
+        "agency_explanation": str
+    })
+    def post(self):
+        agency_name = request.json["agency_name"]
+        agency_kind = request.json["agency_kind"]
+        email = request.json["email"]
+        password = request.json["password"]
+        agency_explanation = request.json["agency_explanation"]
 
-        agency = Agency.query.filter_by(code=agency_code).first()
+        admin = session.query(Agency).filter(Agency.email == email).first()
 
-        return Response({
-            "agency_name": agency.name,
-            "agency_kind": agency.kind,
-            "agency_explanation": agency.explanation,
-            "agency_code": agency.code
-        }, 200)
-
-    @check_admin()
-    def delete(self):
-        agency_code = request.view_args['agency_code']
-
-        agency = Agency.query.filter_by(code=agency_code).first()
-
-        db.session.delete(agency)
-        db.session.commit()
-
-        return Response({"msg": "successful agency delete"}, 200)
-
-    @check_admin()
-    @check_json()
-    def patch(self):
-        agency_code = request.view_args['agency_code']
-        explanation = request.json['explanation']
-
-        agency = Agency.query.filter_by(code=agency_code).first()
-        agency.explanation = explanation
-
-        db.session.commit()
-
-        return Response({"msg": "successful change agency explanation"}, 200)
+        if admin:
+            abort(409, "This email has already been signed up")
+        else:
+            add_agency = Agency(code=token_hex(nbytes=3), email=email, pw=password, name=agency_name,
+                                kind=agency_kind, explanation=agency_explanation)
+            session.add(add_agency)
+            session.commit()
+            return {"msg": "Successful signup to admin"}, 200
 
 
-class Interviewer(Resource):
-    @check_admin()
-    def get(self):
-        agency_code = request.view_args['agency_code']
+class AdminLogin(Resource):
+    @check_json({"email": str, "password": str})
+    def post(self):
+        email = request.json["email"]
+        password = request.json['password']
 
-        interviewer_list = ApplyInterviewer.query.filter(ApplyInterviewer.agency == agency_code)
+        admin = session.query(Agency).filter(Agency.email == email and Agency.pw == password)
 
-        return Response({"interviewer": [
-            {
-                "interviewer_name": interviewer.name
-            } for interviewer in interviewer_list]
-        }, 200)
+        if admin:
+            return {
+                "access": create_access_token(identity=Agency.code),
+                "refresh": create_refresh_token(identity=email)
+            }, 200
+        else:
+            return {"msg": "Check email and password"}
 
 
-api_admin.add_resource(Agency, "/agency/<agency_code>")
-api_admin.add_resource(Interviewer, "/<agency_code>/interviewer")
+api_admin.add_resource(AdminSignup, "/signup")
+api_admin.add_resource(AdminLogin, "/login")
