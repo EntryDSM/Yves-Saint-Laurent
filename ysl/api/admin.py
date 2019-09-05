@@ -53,7 +53,7 @@ class AdminLogin(Resource):
                 "refresh": create_refresh_token(identity=email)
             }, 200
         else:
-            return {"msg": "Check email and password"}
+            return abort(400, "Check email and password")
 
 
 api_admin.add_resource(AdminSignup, "/signup")

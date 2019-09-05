@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from flask_restful import Resource, Api
 
 from ysl.db import session
@@ -18,7 +18,7 @@ class CheckAgencyCode(Resource):
             return {"agency_name": agency.name,
                     "agency_explanation": agency.explanation}, 200
         else:
-            return {"msg": "unseen agency"}, 400
+            return abort(400, "unseen agency")
 
 
-api_agency.add_resource(AgencyCode, "/check")
+api_agency.add_resource(CheckAgencyCode, "/check")

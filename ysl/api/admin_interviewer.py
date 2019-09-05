@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, abort
 from flask_restful import Resource
 
 from ysl.db.belong import Belong
@@ -27,7 +27,7 @@ class AcceptInterviewer(Resource):
             session.commit()
             return {"msg": "Successful interviewer accept"}, 200
         else:
-            return {"msg": "This is an interviewer who didn't apply"}, 400
+            return abort(400, "This is an interviewer who didn't apply")
 
 
 class RejectInterviewer(Resource):
@@ -46,7 +46,7 @@ class RejectInterviewer(Resource):
             session.commit()
             return {"msg": "Successful interviewer reject"}, 200
         else:
-            return {"msg": "This is an interviewer who didn't apply"}, 400
+            return abort(400, "This is an interviewer who didn't apply")
 
 
 api_admin.add_resource(AcceptInterviewer, "/<agency_code>/interviewer/accept")
