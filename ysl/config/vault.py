@@ -26,12 +26,12 @@ def create_vault_client():
     return client
 
 
-def get_db_credential_url(env):
+def get_db_credential_url(env=os.getenv('env')):
     env = 'prod' if env == 'production' else 'test'
     return VAULT_DB_URL.format(env=env)
 
 
-def get_vault_secret_url(env):
+def get_vault_secret_url(env=os.getenv('env')):
     env = 'prod' if env == 'production' else 'test'
     return VAULT_SECRET_CONFIG_URL.format(env=env)
 
