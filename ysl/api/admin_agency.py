@@ -1,5 +1,6 @@
 from flask import request
 from flask_restful import Resource
+from flask_jwt_extended import jwt_required
 
 from ysl.db.agency import Agency
 from ysl.db.apply_interviewer import ApplyInterviewer
@@ -9,6 +10,7 @@ from ysl.api.admin import api_admin
 
 
 class AgencyInformation(Resource):
+    @jwt_required
     @check_admin()
     @check_agency()
     def get(self, agency_code):
@@ -22,6 +24,7 @@ class AgencyInformation(Resource):
                 "agency_code": agency.code
             }, 200
 
+    @jwt_required
     @check_admin()
     @check_agency()
     def delete(self, agency_code):
@@ -33,6 +36,7 @@ class AgencyInformation(Resource):
 
         return {"msg": "successful agency delete"}, 200
 
+    @jwt_required
     @check_admin()
     @check_json({"explanation": str})
     def patch(self, agency_code):
@@ -48,6 +52,7 @@ class AgencyInformation(Resource):
 
 
 class ApplyInterviewerList(Resource):
+    @jwt_required
     @check_admin()
     @check_agency()
     def get(self, agency_code):

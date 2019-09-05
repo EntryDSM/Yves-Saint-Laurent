@@ -25,7 +25,6 @@ def check_json(json):
 def check_admin():
     def decorator(func):
         @wraps(func)
-        @jwt_required
         def wrapeer(*args, **kwargs):
 
             agency = session.query(Agency).query.filter(Agency.email == get_jwt_identity()).first()
