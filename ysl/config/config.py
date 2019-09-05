@@ -11,4 +11,3 @@ class TestConfig(Config):
     DEBUG = True
     TESTING = True
 
-    DATABASE_URL = get_db_credential_url('test')

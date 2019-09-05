@@ -36,7 +36,7 @@ def get_vault_secret_url(env):
     return VAULT_SECRET_CONFIG_URL.format(env=env)
 
 
-@tl.job(timedelta(hours=1))
+@tl.job(timedelta(minutes=50))
 def get_database_config(env=os.getenv('env')):
     client = create_vault_client()
 

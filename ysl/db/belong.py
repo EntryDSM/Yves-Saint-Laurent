@@ -1,7 +1,7 @@
 from ysl.db import db
 
 
-class Belong(db.Model):
+class Belong(Base):
     __tablename__ = 'BELONG_TB'
 
     agency = db.Column(db.String(20), db.ForeignKey("AGENCY_TB.code"), primary_key=True)

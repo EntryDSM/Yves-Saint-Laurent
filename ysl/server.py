@@ -7,4 +7,4 @@ if __name__ == '__main__':
 
     app.run()
 
-    tl.start(block=True)
+    #tl.start(block=True)
