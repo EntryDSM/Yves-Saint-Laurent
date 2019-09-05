@@ -2,6 +2,7 @@ from flask import Blueprint, request, abort
 from flask_restful import Resource, Api
 from flask_jwt_extended import create_access_token, create_refresh_token
 from secrets import token_hex
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from ysl.db.agency import Agency
 from ysl.db import session
@@ -24,7 +25,7 @@ class AdminSignup(Resource):
         agency_name = request.json["agency_name"]
         agency_kind = request.json["agency_kind"]
         email = request.json["email"]
-        password = request.json["password"]
+        password = generate_password_hash(request.json["password"])
         agency_explanation = request.json["agency_explanation"]
 
         admin = session.query(Agency).filter(Agency.email == email).first()
@@ -45,7 +46,7 @@ class AdminLogin(Resource):
         email = request.json["email"]
         password = request.json['password']
 
-        admin = session.query(Agency).filter(Agency.email == email and Agency.pw == password)
+        admin = session.query(Agency).filter(Agency.email == email and check_password_hash(Agency.pw, password))
 
         if admin:
             return {
