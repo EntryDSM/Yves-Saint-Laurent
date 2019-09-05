@@ -19,4 +19,3 @@ class TestConfig(Config):
     JWT_REFRESH_TOKEN_EXPIRES = os.getenv("JWT_REFRESH_TOKEN_EXPIRES")
 
 
-
