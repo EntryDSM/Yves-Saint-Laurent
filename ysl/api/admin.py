@@ -44,7 +44,7 @@ class AdminLogin(Resource):
     @check_json({"email": str, "password": str})
     def post(self):
         email = request.json["email"]
-        password = request.json['password']
+        password = request.json["password"]
 
         admin = session.query(Agency).filter(Agency.email == email and check_password_hash(Agency.pw, password))
 

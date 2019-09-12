@@ -13,7 +13,7 @@ class AcceptInterviewer(Resource):
     @check_json({"user_email": str})
     @check_agency()
     def post(self, agency_code):
-        interviewer = request.json['user_email']
+        interviewer = request.json["user_email"]
 
         add_interviewer = Belong(agency=agency_code, interviewer=interviewer)
         session.add(add_interviewer)
@@ -35,7 +35,7 @@ class RejectInterviewer(Resource):
     @check_json({"user_email": str})
     @check_agency()
     def post(self, agency_code):
-        interviewer = request.json['user_email']
+        interviewer = request.json["user_email"]
 
         delete_interviewer = session.query(ApplyInterviewer).filter(
             ApplyInterviewer.agency == agency_code and ApplyInterviewer.interviewer == interviewer
