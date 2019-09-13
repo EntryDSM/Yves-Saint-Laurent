@@ -111,5 +111,5 @@ class InterviewQuestion(Resource):
 
 
 api_admin.add_resource(CreateInterview, "/{agency_code}/interview")
-api_admin.add_resource(CreateQuestion, "/{agency_code}/{interview_code}/question")
-api_admin.add_resource(InterviewQuestion, "/{agency_code}/{interview_code}/{question_code}")
+api_admin.add_resource(CreateQuestion, "/{agency_code}/{interview_id}/question")
+api_admin.add_resource(InterviewQuestion, "/{agency_code}/{interview_id}/{question_id}")
