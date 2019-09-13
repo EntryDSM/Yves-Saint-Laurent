@@ -50,7 +50,7 @@ class AdminLogin(Resource):
 
         if admin:
             return {
-                "access": create_access_token(identity=admin.code),
+                "access": create_access_token(identity=email),
                 "refresh": create_refresh_token(identity=email)
             }, 200
         else:
