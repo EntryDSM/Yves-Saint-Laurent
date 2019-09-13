@@ -7,6 +7,7 @@ from ysl.db.belong import Belong
 from ysl.db.agency import Agency
 from ysl.db.apply_interviewer import ApplyInterviewer
 from ysl.api.interviewer import api_interviewer
+from ysl.api import check_json
 
 
 class JoinedAgencyList(Resource):
@@ -28,6 +29,7 @@ class JoinedAgencyList(Resource):
 
 class ApplyToAgency(Resource):
     @jwt_required
+    @check_json({"agency+_code": str})
     def post(self):
         agency_code = request.json["agency_code"]
         interviewer = get_jwt_identity()
