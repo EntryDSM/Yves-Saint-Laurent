@@ -14,7 +14,6 @@ class AgencyInformation(Resource):
     @check_admin()
     @check_agency()
     def get(self, agency_code):
-
         agency = session.query(Agency).filter(Agency.code == agency_code).first()
 
         return {
@@ -28,7 +27,6 @@ class AgencyInformation(Resource):
     @check_admin()
     @check_agency()
     def delete(self, agency_code):
-
         agency = session.query(Agency).filter(Agency.code == agency_code).first()
 
         session.delete(agency)
@@ -40,7 +38,6 @@ class AgencyInformation(Resource):
     @check_admin()
     @check_json({"explanation": str})
     def patch(self, agency_code):
-
         explanation = request.json['explanation']
 
         agency = session.query(Agency).filter(Agency.code == agency_code).first()
