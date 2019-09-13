@@ -70,7 +70,7 @@ class InterviewQuestion(Resource):
                 ]
             }, 200
         else:
-            return {"msg": "None Resources"}, 400
+            return abort(400, "None Resources")
 
     @jwt_required
     @check_admin()
@@ -94,7 +94,7 @@ class InterviewQuestion(Resource):
             session.commit()
             return {"msg": "Successful change question"}, 200
         else:
-            return {"msg": "None Resources"}, 400
+            return abort(400, "None Resources")
 
     @jwt_required
     @check_admin()
@@ -107,7 +107,7 @@ class InterviewQuestion(Resource):
             session.commit()
             return {"msg": "Successful delete question"}
         else:
-            return {"msg": "None Resources"}, 400
+            return abort(400, "None Resources")
 
 
 api_admin.add_resource(CreateInterview, "/{agency_code}/interview")
