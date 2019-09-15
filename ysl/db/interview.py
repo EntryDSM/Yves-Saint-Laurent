@@ -8,6 +8,7 @@ class Interview(Base):
 
     interview_id = Column(Integer, primary_key=True)
     interview_name = Column(String(50), nullable=True)
+    explanation = Column(String(100), nullable=True)
     start_day = Column(Date, nullable=True)
     end_day = Column(Date, nullable=True)
     status = Column(Integer, nullable=True, default=1)

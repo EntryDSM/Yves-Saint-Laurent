@@ -16,14 +16,17 @@ class CreateInterview(Resource):
     @check_json({
         "name": str,
         "start_date": str,
-        "end_date": str})
+        "end_date": str,
+        "interview_explanation": str})
     def post(self):
         name = request.json["name"]
         start_date = request.json["start_date"]
         end_date = request.json["end_date"]
+        interview_explanation = request.json["interview_explanation"]
         agency_code = get_jwt_identity()
 
-        add_interview = Interview(interview_name=name, start_day=start_date, end_day=end_date, agency=agency_code)
+        add_interview = Interview(interview_name=name, start_day=start_date,
+                                  end_day=end_date, agency=agency_code, explanation=interview_explanation)
 
         session.add(add_interview)
         session.commit()
