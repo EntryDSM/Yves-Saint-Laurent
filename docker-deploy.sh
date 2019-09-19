@@ -2,12 +2,12 @@
 
 version = "python -c import ysl; print(ysl.__version__)"
 
-echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" -- password-stdin registry.entrydsm.hs.kr
+echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" -- password-stdin registry.entrydsm.hs.kr"
 
-if [[ "$1" == "dev"]];then
+if [[ "$1" == "api"]];then
     echo "Docker build on dev startred"
 
-    docker build 0t registry.entrydsm.hs.kr/ysl:dev .
+    docker build -t registry.entrydsm.hs.kr/ysl:dev .
 
     docker push registry.entrydsm.hs.kr/ysl:dev
 elif [["$1" == "master"]];then

@@ -5,6 +5,8 @@ services:
   - mysql
   - docker
 
+cache: pip
+
 python:
   - "3.7"
 
@@ -26,6 +28,6 @@ deploy:
       branch: master
 
   - provider: script
-    script: bash ./codker-deploy.sh dev
+    script: bash ./codker-deploy.sh api
     on:
-      branch: dev
+      branch: api
