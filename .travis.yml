@@ -5,8 +5,6 @@ services:
   - mysql
   - docker
 
-cache: pip
-
 python:
   - "3.7"
 
