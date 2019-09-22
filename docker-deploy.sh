@@ -7,9 +7,9 @@ echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin registry.e
 if [[ "$1" == "api" ]];then
     echo "Docker build on dev startred"
 
-    docker build -t registry.entrydsm.hs.kr/ysl:api .
+    docker build -t registry.entrydsm.hs.kr/ysl:dev.
 
-    docker push registry.entrydsm.hs.kr/ysl:api
+    docker push registry.entrydsm.hs.kr/ysl:dev
 
 elif [["$1" == "master"]];then
     echo "Docker build on master started"
