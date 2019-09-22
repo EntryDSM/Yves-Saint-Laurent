@@ -24,3 +24,5 @@ deploy:
     script: bash ./codker-deploy.sh api
     on:
       branch: api
+
+  skip_cleanup: true
