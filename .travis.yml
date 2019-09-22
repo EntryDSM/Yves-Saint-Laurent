@@ -21,7 +21,7 @@ deploy:
       branch: master
 
   - provider: script
-    script: bash ./codker-deploy.sh api
+    script: bash ./docker-deploy.sh api
     on:
       branch: api
 
