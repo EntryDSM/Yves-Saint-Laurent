@@ -51,3 +51,4 @@ def get_database_config(env=os.getenv('env')):
     config.update(**client.read(get_vault_secret_url(env=env))['data'])
 
     return config
+

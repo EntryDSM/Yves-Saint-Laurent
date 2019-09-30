@@ -1,4 +1,3 @@
-from ysl.app import create_app
 from ysl.config.config import TestConfig
 from ysl.config.vault import tl
 from ysl.db import Base, engine
