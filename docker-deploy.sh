@@ -7,9 +7,9 @@ echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin registry.e
 if [[ "$1" == "dev" ]];then
     echo "Docker build on develop started"
 
-    docker build -t registry.entrydsm.hs.kr/chanel:develop .
+    docker build -t registry.entrydsm.hs.kr/ysl:develop .
 
-    docker push registry.entrydsm.hs.kr/chanel:develop
+    docker push registry.entrydsm.hs.kr/ysl:develop
 
     echo "Docker image pushed"
 
