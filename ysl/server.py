@@ -1,11 +1,18 @@
-from ysl.config.config import TestConfig
-from ysl.config.vault import tl
-from ysl.db import Base, engine
+import os
 
-app = create_app()
+from ysl.config.config import TestConfig, ProdConfig
+from ysl.db import Base, engine
+from ysl.app import create_app
+
 Base.metadata.create_all(engine)
+env = os.getenv('env')
+
 
 if __name__ == '__main__':
-    app.run()
 
-    #tl.start(block=True)
+    if env == 'test':
+        app = create_app(TestConfig)
+        app.run()
+    elif env == 'prod':
+        app = create_app(ProdConfig)
+        app.run()
