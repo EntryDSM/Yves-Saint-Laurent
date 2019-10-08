@@ -2,8 +2,8 @@ from flask import Blueprint
 from flask_restful import Api
 
 from ysl.api.admin_agency import AgencyInformation, ApplyInterviewerList
-from ysl.api.admin import AdminLogin, AdminSignup
-from ysl.api.interviewer import CheckAgencyCode, InterviewerSignup, InterviewerLogin, Refresh
+from ysl.api.admin import AdminSignup
+from ysl.api.interviewer import CheckAgencyCode, InterviewerSignup, Login, Refresh
 from ysl.api.admin_interview import CreateInterview, CreateQuestion, InterviewQuestion
 from ysl.api.admin_interivew_list import ReadyInterview, DoneInterview
 from ysl.api.admin_interviewer import AcceptInterviewer, RejectInterviewer
@@ -20,7 +20,6 @@ bp_interviewer = Blueprint("agency", __name__, url_prefix="/api/v1")
 api_interviewer = Api(bp_interviewer)
 
 api_admin.add_resource(AdminSignup, "/signup")
-api_admin.add_resource(AdminLogin, "/login")
 api_admin.add_resource(AgencyInformation, "/agency/<agency_code>")
 api_admin.add_resource(ApplyInterviewerList, "/<agency_code>/interviewer")
 api_admin.add_resource(CreateInterview, "/<agency_code>/interview")
@@ -34,7 +33,7 @@ api_admin.add_resource(AddAccessInterviewer, "/<agency_code>/<interview_id>/acce
 
 api_interviewer.add_resource(CheckAgencyCode, "/agency/check")
 api_interviewer.add_resource(InterviewerSignup, "/interviewer/signup")
-api_interviewer.add_resource(InterviewerLogin, "/interviewer/login")
+api_interviewer.add_resource(Login, "/login")
 api_interviewer.add_resource(OngoingInterview, "/<agency_code>")
 api_interviewer.add_resource(SearchInterviewee, "/<agency_code>/<interview_id>/search")
 api_interviewer.add_resource(JoinedAgencyList, "/agency")
