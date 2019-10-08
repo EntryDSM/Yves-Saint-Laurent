@@ -11,7 +11,7 @@ if [[ "$1" == "api" ]];then
 
     docker push registry.entrydsm.hs.kr/ysl:dev
 
-elif [["$1" == "master"]];then
+elif [[ "$1" == "master" ]];then
     echo "Docker build on master started"
 
     docker build -t registry.entrydsm.hs.kr/ysl:${version} .
