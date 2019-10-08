@@ -9,7 +9,7 @@ from ysl.config.config import Config
 def create_app():
     _app = Flask('ysl')
 
-    cors = CORS(_app, resources={
+    CORS(_app, resources={
         r"/api/*": {"origin": "*"}
     })
 
