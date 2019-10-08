@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 from ysl.api.router import bp_interviewer, bp_admin
 from ysl.config.config import Config
@@ -7,6 +8,10 @@ from ysl.config.config import Config
 
 def create_app():
     _app = Flask('ysl')
+
+    cors = CORS(_app, resources={
+        r"/api/*": {"origin": "*"}
+    })
 
     _app.register_blueprint(bp_interviewer)
     _app.register_blueprint(bp_admin)
