@@ -7,5 +7,5 @@ class Interviewer(Base):
     __tablename__ = 'INTERVIEWER_TB'
 
     email = Column(String(50), primary_key=True)
-    pw = Column(String(50), nullable=True)
+    pw = Column(String(200), nullable=True)
     name = Column(String(50), nullable=True)
