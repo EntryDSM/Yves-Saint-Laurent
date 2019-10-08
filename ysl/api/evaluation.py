@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from ysl.db import session
 from ysl.db.question import Question
 from ysl.db.evaluation import Evaluation
+from ysl.db.question_check_list import QuestionCheckList
 from ysl.api import check_access_interview
 
 
@@ -13,21 +14,23 @@ class GetQuestionList(Resource):
     def get(self, agency_code, interview_id):
         check_access_interview(interview_id)
 
-        questions = session.query(Question).filter(
-            Question.interview == interview_id).order_by(Question.num).all()
+        questions = session.query(Question).filter(Question.interview == interview_id).all()
 
         if questions:
             return {
-                    "questions": [
-                        {
-                            "question_id": question.id,
-                            "question_num": question.num,
-                            "question_content": question.content,
-                            "question_type": question.type,
-                        } for question in questions]
-            }, 200
+                       "interview_question": [
+                           {
+                               "question_id": question.id,
+                               "question_num": question.num,
+                               "question_title": question.title,
+                               "question_type": question.type,
+                               "check_list": [check_list.content for check_list in
+                                              session.query(QuestionCheckList).filter(
+                                                  QuestionCheckList.question == question.id).all()]
+                           } for question in questions]
+                   }, 200
         else:
-            abort(400, "None Resources")
+            return abort(400, "None Resources")
 
 
 class EvaluationForInterviewee(Resource):
