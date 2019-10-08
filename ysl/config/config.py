@@ -19,6 +19,6 @@ class TestConfig(Config):
 
 
 class ProdConfig(Config):
-    HOST = 'https://interview.entrydsm.hs.kr/'
+    HOST = '0.0.0.0'
     PORT = 8084
     DEBUG = False
