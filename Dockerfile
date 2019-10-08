@@ -20,6 +20,6 @@ RUN apt-get update && \
 
 RUN pip install -r requirements.txt
 
-CMD [".ysl/server.py"]
+CMD ["-m", "ysl"]
 EXPOSE 80
 ENTRYPOINT ["python"]
