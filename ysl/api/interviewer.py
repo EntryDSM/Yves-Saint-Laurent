@@ -28,7 +28,7 @@ class InterviewerSignup(Resource):
         "name": str,
         "email": str,
         "password": str,
-        "agency": int
+        "agency": str
     })
     def post(self):
         name = request.json["name"]
