@@ -1,12 +1,15 @@
-from ysl.db import db
+from sqlalchemy import Column, String, ForeignKey, Integer, Date
+
+from ysl.db import Base
 
 
-class Interview(db.Model):
+class Interview(Base):
     __tablename__ = 'INTERVIEW_TB'
 
-    interview_id = db.Column(db.Integer, primary_key=True)
-    interview_name = db.Column(db.String(50), nullable=True)
-    start_day = db.Column(db.Date, nullable=True)
-    end_day = db.Column(db.Date, nullable=True)
-    status = db.Column(db.Integer, nullable=True, default=1)
-    agency = db.Column(db.String(20), db.ForeignKey("AGENCY.code"), nullable=True)
+    interview_id = Column(Integer, primary_key=True)
+    interview_name = Column(String(50), nullable=True)
+    explanation = Column(String(100))
+    start_day = Column(Date, nullable=True)
+    end_day = Column(Date, nullable=True)
+    status = Column(Integer, nullable=True, default=1)
+    agency = Column(String(20), ForeignKey("AGENCY_TB.code"), nullable=True)

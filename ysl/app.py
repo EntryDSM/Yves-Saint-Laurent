@@ -1,19 +1,23 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
 
-from ysl.api.agency import bp_agency
-from ysl.api.admin import bp_admin
-from ysl.db import db
-from ysl.config.vault import get_vault_secret_url
+from ysl.api.router import bp_interviewer, bp_admin
 
 
-def create_app(env):
+def create_app(config):
     _app = Flask('ysl')
 
-    _app.register_blueprint(bp_agency)
+    _app.register_blueprint(bp_interviewer)
     _app.register_blueprint(bp_admin)
 
-    db.init_app(_app)
-    db.create_all(app=_app)
-    _app.config['SQLALCHEMY_DATABASE_URI'] = get_vault_secret_url(env=env)
+    _app.config['JWT_SECRET_KEY'] = config.JWT_SECRET_KEY
+    _app.config['JWT_ACCESS_TOKEN_EXPIRES'] = config.JWT_ACCESS_TOKEN_EXPIRES
+    _app.config['JWT_REFRESH_TOKEN_EXPIRES'] = config.JWT_REFRESH_TOKEN_EXPIRES
+
+    _app.config['HOST'] = config.HOST
+    _app.config['PORT'] = config.PORT
+    _app.config['DEBUG'] = config.DEBUG
+
+    JWTManager(app=_app)
 
     return _app

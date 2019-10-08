@@ -1,12 +1,14 @@
-from ysl.db import db
+from sqlalchemy import Column, Text, String
+
+from ysl.db import Base
 
 
-class Agency(db.Model):
+class Agency(Base):
     __tablename__ = 'AGENCY_TB'
 
-    code = db.Column(db.String(20), primary_key=True)
-    email = db.Column(db.String(50), nullable=True)
-    pw = db.Column(db.String(50), nullable=True)
-    name = db.Column(db.String(50), nullable=True)
-    kind = db.Column(db.String(50), nullable=True)
-    explanation = db.Column(db.Text, nullable=True)
+    code = Column(String(20), primary_key=True)
+    email = Column(String(50), nullable=True)
+    pw = Column(String(200), nullable=True)
+    name = Column(String(50), nullable=True)
+    kind = Column(String(50), nullable=True)
+    explanation = Column(Text, nullable=True)

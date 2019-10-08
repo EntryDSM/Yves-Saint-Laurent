@@ -1,31 +1,36 @@
 dist: xenial
+
 language: python
+
+python:
+  - "3.7"
 
 services:
   - mysql
   - docker
 
-python:
-  - "3.7"
+cache: pip
 
 install:
-  - pip install -r requirements.txt
-  - pip install -r requirements_dev.txt
-  - pip install codecov
+  - "pip install -r requirements.txt"
 
 script:
-  - pytest --cov=./Yves-Saint-Laurent ./tests
-
-after_success:
-  - codecov
+  - echo "skipping tests"
 
 deploy:
-  - provider: script
-    script: bash ./docker-deploy.sh master
-    on:
+  -
+    provider: script
+    script: "bash ./docker-deploy.sh master"
+    true:
       branch: master
+  -
+    provider: script
+    script: "bash ./docker-deploy.sh api"
+    true:
+      branch: api
 
-  - provider: script
-    script: bash ./codker-deploy.sh dev
-    on:
-      branch: dev
+  -
+    provider: script
+    script: "bash ./docker-deploy.sh develop"
+    true:
+      branch: develop

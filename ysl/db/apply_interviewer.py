@@ -3,8 +3,8 @@ from sqlalchemy import Column, String, ForeignKey
 from ysl.db import Base
 
 
-class Belong(Base):
-    __tablename__ = 'BELOGN_TB'
+class ApplyInterviewer(Base):
+    __tablename__ = 'APPLY_INTERVIEWER_TB'
 
     agency = Column(String(20), ForeignKey("AGENCY_TB.code"), primary_key=True)
     interviewer = Column(String(50), ForeignKey("INTERVIEWER_TB.email"), primary_key=True)
