@@ -5,6 +5,7 @@ from flask_jwt_extended import jwt_required
 from ysl.db import session
 from ysl.db.interview import Interview
 from ysl.db.question import Question
+from ysl.db.question_check_list import QuestionCheckList
 from ysl.api import check_json, check_admin
 
 
@@ -40,10 +41,23 @@ class CreateQuestion(Resource):
         questions = request.json["question"]
 
         for question in questions:
-            add_question = Question(num=question['question_num'], content=question['content'],
-                                    type=question['type'], interview=interview_id)
+            add_question = Question(num=question['question_num'], title=question['question_title'],
+                                    type=question['question_type'], interview=interview_id)
+
             session.add(add_question)
             session.commit()
+
+            question_id = session.query(Question).filter(Question.interview == interview_id).filter(
+                          Question.num == question['question_num']).first()
+
+            check_lists = question['check_list']
+
+            if not check_lists == []:
+                for i in range(len(check_lists)):
+                    add_check_list = QuestionCheckList(question=question_id.id, content=check_lists[i])
+
+                    session.add(add_check_list)
+                    session.commit()
 
         return {"msg": " Successful create question"}, 201
 
@@ -55,13 +69,15 @@ class CreateQuestion(Resource):
 
         if questions:
             return {
-                       "interview_question": [
-                           {
-                               "question_id": question.id,
-                               "question_num": question.num,
-                               "content": question.content,
-                               "type": question.type
-                           } for question in questions]
+                    "interview_question": [
+                        {
+                            "question_id": question.id,
+                            "question_num": question.num,
+                            "question_title": question.title,
+                            "question_type": question.type,
+                            "check_list": [check_list.content for check_list in session.query(QuestionCheckList).filter(
+                                                                  QuestionCheckList.question == question.id).all()]
+                        } for question in questions]
                    }, 200
         else:
             return abort(400, "None Resources")
@@ -70,19 +86,40 @@ class CreateQuestion(Resource):
     def put(self, agency_code, interview_id):
         check_admin(agency_code)
 
-        delete_questions = session.query(Question).filter(Question.interview == interview_id).all()
+        questions = session.query(Question).filter(Question.interview == interview_id).filter(
+            Question.interview == interview_id).all()
 
-        for delete_question in delete_questions:
-            session.delete(delete_question)
-            session.commit()
+        for question in questions:
+            check_lists = session.query(QuestionCheckList).filter(QuestionCheckList.question == question.id).all()
+
+            if check_lists:
+                for check_list in check_lists:
+                    session.delete(check_list)
+                    session.commit()
+            else:
+                session.delete(question)
+                session.commit()
 
         questions = request.json["question"]
 
         for question in questions:
-            add_question = Question(num=question['question_num'], content=question['content'],
-                                    type=question['type'], interview=interview_id)
+            add_question = Question(num=question['question_num'], title=question['question_title'],
+                                    type=question['question_type'], interview=interview_id)
+
             session.add(add_question)
             session.commit()
+
+            question_id = session.query(Question).filter(Question.interview == interview_id).filter(
+                Question.num == question['question_num']).first()
+
+            check_lists = question['check_list']
+
+            if not check_lists == []:
+                for i in range(len(check_lists)):
+                    add_check_list = QuestionCheckList(question=question_id.id, content=check_lists[i])
+
+                    session.add(add_check_list)
+                    session.commit()
 
         return {"msg": " Successful change interview question"}, 201
 
@@ -92,12 +129,20 @@ class InterviewQuestion(Resource):
     def delete(self, agency_code, interview_id, question_id):
         check_admin(agency_code)
 
-        question = session.query(Question).filter(Question.id == question_id and
+        question = session.query(Question).filter(Question.id == question_id).filter(
                                                   Question.interview == interview_id).first()
+
+        check_lists = session.query(QuestionCheckList).filter(QuestionCheckList.question == question_id).all()
 
         if question:
             session.delete(question)
             session.commit()
+
+            if check_lists:
+                for check_list in check_lists:
+                    session.delete(check_list)
+                    session.commit()
             return {"msg": "Successful delete question"}
+
         else:
             return abort(400, "None Resources")

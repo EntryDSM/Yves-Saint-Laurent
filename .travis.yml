@@ -12,7 +12,7 @@ services:
 cache: pip
 
 install:
-  - "pip install -r requirements.txt"
+  - pip install -r requirements.txt
 
 script:
   - echo "skipping tests"
@@ -24,11 +24,11 @@ deploy:
       branch: master
 
   - provider: script
-    script: "bash ./docker-deploy.sh api"
+    script: bash ./docker-deploy.sh api
     on:
       branch: api
 
   - provider: script
-    script: "bash ./docker-deploy.sh develop"
+    script: bash ./docker-deploy.sh develop
     on:
       branch: develop

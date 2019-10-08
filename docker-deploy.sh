@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 
-version=`python -c "import ysl; print(ysl.__version__)"`
+version=`python -c "1"`
 
 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin registry.entrydsm.hs.kr
 
-if [[ "$1" == "develop" ]];then
-    echo "Docker build on dev startred"
+if [[ "$1" == "dev" ]];then
+    echo "Docker build on develop started"
 
-    docker build -t registry.entrydsm.hs.kr/ysl:develop .
+    docker build -t registry.entrydsm.hs.kr/chanel:develop .
 
-    docker push registry.entrydsm.hs.kr/ysl:develop
+    docker push registry.entrydsm.hs.kr/chanel:develop
 
     echo "Docker image pushed"
+
 
 elif [[ "$1" == "master" ]];then
     echo "Docker build on master started"

@@ -8,6 +8,6 @@ class Question(Base):
 
     id = Column(Integer, primary_key=True)
     num = Column(Integer, nullable=True)
-    content = Column(String(100), nullable=True)
+    title = Column(String(100), nullable=True)
     type = Column(Integer, nullable=True)
     interview = Column(Integer, ForeignKey("INTERVIEW_TB.interview_id"), nullable=True)
