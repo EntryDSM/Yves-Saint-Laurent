@@ -1,14 +1,13 @@
-from flask import Blueprint, request, abort
-from flask_restful import Resource, Api
+from flask import request, abort
+from flask_restful import Resource
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_refresh_token_required, get_jwt_identity
 
 from ysl.db import session
 from ysl.db.interviewer import Interviewer
 from ysl.db.agency import Agency
-
-bp_interviewer = Blueprint("agency", __name__, url_prefix="/api/v1")
-api_interviewer = Api(bp_interviewer)
+from ysl.db.apply_interviewer import ApplyInterviewer
+from ysl.api import check_json
 
 
 class CheckAgencyCode(Resource):
@@ -25,10 +24,17 @@ class CheckAgencyCode(Resource):
 
 
 class InterviewerSignup(Resource):
+    @check_json({
+        "name": str,
+        "email": str,
+        "password": str,
+        "agency": int
+    })
     def post(self):
         name = request.json["name"]
         email = request.json["email"]
         password = generate_password_hash(request.json["password"])
+        agency = request.json["agency"]
 
         interviewer = session.query(Interviewer).filter(Interviewer.email == email).first()
 
@@ -38,10 +44,18 @@ class InterviewerSignup(Resource):
             add_interviewer = Interviewer(name=name, email=email, pw=password)
             session.add(add_interviewer)
             session.commit()
-            return {"msg": "Successful signup to interviewer"}, 409
+
+            add_apply_interviewer = ApplyInterviewer(agency= agency, interviewer=email)
+            session.add(add_apply_interviewer)
+            session.commit()
+            return {"msg": "Successful signup to interviewer"}, 201
 
 
 class InterviewerLogin(Resource):
+    @check_json({
+        "email": str,
+        "password": str
+    })
     def post(self):
         email = request.json["email"]
         password = request.json["password"]
@@ -58,8 +72,21 @@ class InterviewerLogin(Resource):
             return abort(400, "Check email and password")
 
 
-api_interviewer.add_resource(CheckAgencyCode, "/agency/check")
-api_interviewer.add_resource(InterviewerSignup, "/interviewer/signup")
-api_interviewer.add_resource(InterviewerLogin, "/interviewer/login")
+class Refresh(Resource):
+    @jwt_refresh_token_required
+    def patch(self):
+        admin = session.query(Agency).filter(Agency.email == get_jwt_identity()).first()
+        interviewer = session.query(Interviewer).filter(Interviewer.email == get_jwt_identity()).first()
 
-
+        if admin:
+            return {
+                "access": create_access_token(identity=admin.email),
+                "refresh": create_refresh_token(identity=admin.email)
+            }, 200
+        elif interviewer:
+            return {
+                "access": create_access_token(identity=interviewer.email),
+                "refresh": create_refresh_token(identity=interviewer.email)
+            }
+        else:
+            return abort(400, "None Response")

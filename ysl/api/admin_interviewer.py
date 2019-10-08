@@ -1,26 +1,33 @@
 from flask import request, abort
 from flask_restful import Resource
+from flask_jwt_extended import jwt_required
 
 from ysl.db.belong import Belong
 from ysl.db.apply_interviewer import ApplyInterviewer
 from ysl.db import session
-from ysl.api.admin import api_admin
-from ysl.api import check_admin, check_json, check_agency
+from ysl.api import check_admin, check_json
 
 
 class AcceptInterviewer(Resource):
-    @check_admin()
+    @jwt_required
     @check_json({"user_email": str})
-    @check_agency()
     def post(self, agency_code):
+        check_admin(agency_code)
+
         interviewer = request.json["user_email"]
+
+        belong_interviewer = session.query(Belong).filter(Belong.interviewer == interviewer).filter(
+            Belong.agency == agency_code
+        ).first()
+
+        if belong_interviewer:
+            abort(409, "This email has already been belong agency")
 
         add_interviewer = Belong(agency=agency_code, interviewer=interviewer)
         session.add(add_interviewer)
 
         delete_interviewer = session.query(ApplyInterviewer).filter(
-            ApplyInterviewer.agency == agency_code and ApplyInterviewer.interviewer == interviewer
-        ).first()
+            ApplyInterviewer.agency == agency_code).filter(ApplyInterviewer.interviewer == interviewer).first()
 
         if delete_interviewer:
             session.delete(delete_interviewer)
@@ -31,10 +38,10 @@ class AcceptInterviewer(Resource):
 
 
 class RejectInterviewer(Resource):
-    @check_admin()
     @check_json({"user_email": str})
-    @check_agency()
     def post(self, agency_code):
+        check_admin(agency_code)
+
         interviewer = request.json["user_email"]
 
         delete_interviewer = session.query(ApplyInterviewer).filter(
@@ -47,7 +54,3 @@ class RejectInterviewer(Resource):
             return {"msg": "Successful interviewer reject"}, 200
         else:
             return abort(400, "This is an interviewer who didn't apply")
-
-
-api_admin.add_resource(AcceptInterviewer, "/<agency_code>/interviewer/accept")
-api_admin.add_resource(RejectInterviewer, "/<agency_code>/interviewer/reject")

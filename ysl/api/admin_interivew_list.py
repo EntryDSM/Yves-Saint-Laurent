@@ -4,25 +4,25 @@ from flask_jwt_extended import jwt_required
 
 from ysl.db import session
 from ysl.db.interview import Interview
-from ysl.api.admin import api_admin
-from ysl.api import check_agency, check_admin
+from ysl.api import check_admin
 
 
 class ReadyInterview(Resource):
     @jwt_required
-    @check_admin()
-    @check_agency()
     def get(self, agency_code):
-        ready_interview = session.query(Interview).filter(
-            Interview.agency == agency_code and Interview.status == 1).all()
+        check_admin(agency_code)
 
-        if ready_interview:
+        ready_interviews = session.query(Interview).filter(
+            Interview.agency == agency_code).filter(Interview.status == 1).all()
+
+        if ready_interviews:
             return {
                 "interview": [
                     {
                         "interview_name": interview.interview_name,
-                        "interview_explanation": interview.explanation
-                    } for interview in ready_interview]
+                        "interview_explanation": interview.explanation,
+                        "interview_id": interview.interview_id
+                    } for interview in ready_interviews]
             }, 200
         else:
             return abort(400, "None Resources")
@@ -30,23 +30,21 @@ class ReadyInterview(Resource):
 
 class DoneInterview(Resource):
     @jwt_required
-    @check_admin()
-    @check_agency()
     def get(self, agency_code):
-        done_interview = session.query(Interview).filter(
-            Interview.agency == agency_code and Interview.status == 3).all()
+        check_admin(agency_code)
 
-        if done_interview:
+        done_interviews = session.query(Interview).filter(
+            Interview.agency == agency_code).filter(Interview.status == 3).all()
+
+        if done_interviews:
             return {
                        "interview": [
                            {
                                "interview_name": interview.interview_name,
-                               "interview_explanation": interview.explanation
-                           } for interview in done_interview]
+                               "interview_explanation": interview.explanation,
+                               "interview_id": interview.interview_id
+                           } for interview in done_interviews]
                    }, 200
         else:
             return abort(400, "None Resources")
 
-
-api_admin.add_resource(ReadyInterview, "/{agency_code}/ready/interview")
-api_admin.add_resource(DoneInterview, "/{agency_code}/done/interview")

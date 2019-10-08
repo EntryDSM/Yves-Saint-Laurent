@@ -4,35 +4,35 @@ from flask_jwt_extended import jwt_required
 
 from ysl.db import session
 from ysl.db.access import Access
-from ysl.api.admin import api_admin
-from ysl.api import check_json, check_agency, check_admin
+from ysl.db.interviewer import Interviewer
+from ysl.api import check_json, check_admin
 
 
 class AddAccessInterviewer(Resource):
     @jwt_required
-    @check_admin()
-    @check_agency()
-    def get(self, interview_id):
-        #join식 추가
-        access_interviewer = session.query(Access).filter(Access.interview == interview_id).all()
+    def get(self, agency_code, interview_id):
+        check_admin(agency_code)
 
-        if access_interviewer:
+        access_interviewers = session.query(Access, Interviewer).join(Interviewer).filter(
+                              Access.interview == interview_id).all()
+
+        if access_interviewers:
             return {
                 "interviewer": [
                     {
-                        "interviewer": interviewer_info.name,
-                        "interviewer_email": interviewer_info.email
-                    } for interviewer_info in access_interviewer]
+                        "interviewer_name": interviewer.Interviewer.name,
+                        "interviewer_email": interviewer.Interviewer.email
+                    } for interviewer in access_interviewers]
             }
         else:
             abort(400, "None interviewer")
 
     @jwt_required
-    @check_admin()
-    @check_agency()
-    @check_json({"interviewer": str})
-    def post(self, interview_id):
-        interviewer = request.json["interviewer"]
+    @check_json({"interviewer_email": str})
+    def post(self, agency_code, interview_id):
+        check_admin(agency_code)
+
+        interviewer = request.json["interviewer_email"]
 
         add_access_interviewer = Access(interview=interview_id, interviewer=interviewer)
 
@@ -42,10 +42,10 @@ class AddAccessInterviewer(Resource):
         return {"msg": "Successful interviewer access"}
 
     @jwt_required
-    @check_admin()
-    @check_agency()
-    def delete(self, interview_id):
-        interviewer = request.args.get('interviewer')
+    def delete(self, agency_code, interview_id):
+        check_admin(agency_code)
+
+        interviewer = request.json["interviewer_email"]
 
         access_interviewer = session.query(Access).filter(
             Access.interview == interview_id and Access.interviewer == interviewer).first()
@@ -58,4 +58,3 @@ class AddAccessInterviewer(Resource):
             abort(400, "None interviewer")
 
 
-api_admin.add_resource(AddAccessInterviewer, "/{agency_code}/{interview_id}/access")
