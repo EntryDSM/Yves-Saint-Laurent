@@ -5,6 +5,7 @@ from ysl.db import Base
 
 class Interview(Base):
     __tablename__ = 'INTERVIEW_TB'
+    _table_args_ = {'mysql_collate': 'utf8_general_ci'}
 
     interview_id = Column(Integer, primary_key=True)
     interview_name = Column(String(50), nullable=True)
