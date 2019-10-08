@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-version=`python -c "1"`
+version=`1`
 
 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin registry.entrydsm.hs.kr
 
