@@ -45,7 +45,7 @@ class InterviewerSignup(Resource):
             session.add(add_interviewer)
             session.commit()
 
-            add_apply_interviewer = ApplyInterviewer(agency= agency, interviewer=email)
+            add_apply_interviewer = ApplyInterviewer(agency=agency, interviewer=email)
             session.add(add_apply_interviewer)
             session.commit()
             return {"msg": "Successful signup to interviewer"}, 201
@@ -60,19 +60,18 @@ class Login(Resource):
         email = request.json["email"]
         password = request.json["password"]
 
-        interviewer = session.query(Interviewer).filter(
-            Interviewer.email == email and check_password_hash(Interviewer.pw, password))
+        interviewer = session.query(Interviewer).filter(Interviewer.email == email).first()
+        interviewer_qw_check = check_password_hash(interviewer.pw, password) if interviewer else None
 
-        admin = session.query(Interviewer).filter(
-            Agency.email == email and check_password_hash(Agency.pw, password)
-        )
+        admin = session.query(Agency).filter(Agency.email == email).first()
+        admin_pw_check = check_password_hash(admin.pw, password) if admin else None
 
-        if interviewer:
+        if interviewer_qw_check:
             return {
                     "access": create_access_token(identity=email),
                     "refresh": create_refresh_token(identity=email)
             }, 200
-        elif admin:
+        elif admin_pw_check:
             return {
                        "access": create_access_token(identity=email),
                        "refresh": create_refresh_token(identity=email)
