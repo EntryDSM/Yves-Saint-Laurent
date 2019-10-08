@@ -6,11 +6,13 @@ ENV VAULT_TOKEN $VAULT_TOKEN
 ENV GITHUB_TOKEN $GITHUB_TOKEN
 ENV RUN_ENV prod
 ENV SERVICE_NAME ysl
+ENV DATABASE_URL $DATABASE_URL
+ENV JWT_SECRET_KEY $JWT_SECRET_KEY
 
 COPY . .
 WORKDIR .
 
-RUN pip install -r requirements_dev.txt
+RUN pip install -r requirements.txt
 
 CMD ["-m", "ysl"]
 EXPOSE 80

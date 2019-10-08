@@ -18,19 +18,17 @@ script:
   - echo "skipping tests"
 
 deploy:
-  -
-    provider: script
-    script: "bash ./docker-deploy.sh master"
-    true:
+  - provider: script
+    script: bash ./docker-deploy.sh master
+    on:
       branch: master
-  -
-    provider: script
+
+  - provider: script
     script: "bash ./docker-deploy.sh api"
-    true:
+    on:
       branch: api
 
-  -
-    provider: script
+  - provider: script
     script: "bash ./docker-deploy.sh develop"
-    true:
+    on:
       branch: develop
