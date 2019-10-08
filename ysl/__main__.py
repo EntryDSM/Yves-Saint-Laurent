@@ -1,3 +1,5 @@
+# -- coding: utf-8 --
+
 import os
 
 from ysl.config.config import TestConfig, ProdConfig
