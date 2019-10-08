@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-version = `"python -c import ysl; print(ysl.__version__)"`
+version=`python -c "import ysl; print(ysl.__version__)"`
 
 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin registry.entrydsm.hs.kr
 
@@ -11,7 +11,7 @@ if [[ "$1" == "api" ]];then
 
     docker push registry.entrydsm.hs.kr/ysl:dev
 
-elif [["$1" == "master"]];then
+elif [[ "$1" == "master" ]];then
     echo "Docker build on master started"
 
     docker build -t registry.entrydsm.hs.kr/ysl:${version} .
