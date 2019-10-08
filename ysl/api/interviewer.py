@@ -51,7 +51,7 @@ class InterviewerSignup(Resource):
             return {"msg": "Successful signup to interviewer"}, 201
 
 
-class InterviewerLogin(Resource):
+class Login(Resource):
     @check_json({
         "email": str,
         "password": str
@@ -63,11 +63,20 @@ class InterviewerLogin(Resource):
         interviewer = session.query(Interviewer).filter(
             Interviewer.email == email and check_password_hash(Interviewer.pw, password))
 
+        admin = session.query(Interviewer).filter(
+            Agency.email == email and check_password_hash(Agency.pw, password)
+        )
+
         if interviewer:
             return {
                     "access": create_access_token(identity=email),
                     "refresh": create_refresh_token(identity=email)
             }, 200
+        elif admin:
+            return {
+                       "access": create_access_token(identity=email),
+                       "refresh": create_refresh_token(identity=email)
+                   }, 200
         else:
             return abort(400, "Check email and password")
 
