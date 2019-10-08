@@ -12,7 +12,7 @@ services:
 cache: pip
 
 install:
-  - "pip install -r requirements.txt"
+  - pip install -r requirements.txt
 
 script:
   - echo "skipping tests"
