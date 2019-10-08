@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 from ysl.config.config import Config
 
-engine = create_engine(Config.DATABASE_URL, encoding="utf-8", echo=True)
+engine = create_engine(Config.DATABASE_URL, encoding="utf-8")
 Base = declarative_base()
 
 Session = sessionmaker(bind=engine)

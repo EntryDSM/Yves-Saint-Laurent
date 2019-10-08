@@ -68,11 +68,13 @@ class Login(Resource):
 
         if interviewer_qw_check:
             return {
+                    "admin": False,
                     "access": create_access_token(identity=email),
                     "refresh": create_refresh_token(identity=email)
             }, 200
         elif admin_pw_check:
             return {
+                       "admin": True,
                        "access": create_access_token(identity=email),
                        "refresh": create_refresh_token(identity=email)
                    }, 200
@@ -95,6 +97,6 @@ class Refresh(Resource):
             return {
                 "access": create_access_token(identity=interviewer.email),
                 "refresh": create_refresh_token(identity=interviewer.email)
-            }
+            }, 200
         else:
             return abort(400, "None Response")
