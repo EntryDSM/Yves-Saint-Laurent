@@ -45,6 +45,7 @@ class InterviewerSignup(Resource):
             if check_agency:
                 add_interviewer = Interviewer(name=name, email=email, pw=password)
                 session.add(add_interviewer)
+                session.commit()
 
                 add_apply_interviewer = ApplyInterviewer(agency=agency, interviewer=email)
                 session.add(add_apply_interviewer)
