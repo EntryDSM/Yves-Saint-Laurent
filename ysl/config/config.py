@@ -6,8 +6,8 @@ class Config:
     SYSTEM_NAME = 'Yves-Saint-Laurent'
 
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=10)
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=1)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=20)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 
     DATABASE_URL = os.getenv('DATABASE_URL')
 
