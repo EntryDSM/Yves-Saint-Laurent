@@ -37,18 +37,21 @@ class InterviewerSignup(Resource):
         agency = request.json["agency"]
 
         interviewer = session.query(Interviewer).filter(Interviewer.email == email).first()
+        check_agency = session.query(Agency).filter(Agency.code == agency).first()
 
         if interviewer:
             abort(409, "This email has already been signed up")
         else:
-            add_interviewer = Interviewer(name=name, email=email, pw=password)
-            session.add(add_interviewer)
-            session.commit()
+            if check_agency:
+                add_interviewer = Interviewer(name=name, email=email, pw=password)
+                session.add(add_interviewer)
 
-            add_apply_interviewer = ApplyInterviewer(agency=agency, interviewer=email)
-            session.add(add_apply_interviewer)
-            session.commit()
-            return {"msg": "Successful signup to interviewer"}, 201
+                add_apply_interviewer = ApplyInterviewer(agency=agency, interviewer=email)
+                session.add(add_apply_interviewer)
+                session.commit()
+                return {"msg": "Successful signup to interviewer"}, 201
+            else:
+                abort(404, "Not found Agency")
 
 
 class Login(Resource):
@@ -68,9 +71,9 @@ class Login(Resource):
 
         if interviewer_qw_check:
             return {
-                    "admin": False,
-                    "access": create_access_token(identity=email),
-                    "refresh": create_refresh_token(identity=email)
+                        "admin": False,
+                        "access": create_access_token(identity=email),
+                        "refresh": create_refresh_token(identity=email)
             }, 200
         elif admin_pw_check:
             return {
