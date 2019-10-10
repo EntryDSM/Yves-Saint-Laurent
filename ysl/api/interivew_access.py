@@ -25,7 +25,7 @@ class AddAccessInterviewer(Resource):
                     } for interviewer in access_interviewers]
             }
         else:
-            abort(400, "None interviewer")
+            abort(404, "None interviewer")
 
     @jwt_required
     @check_json({"interviewer_email": str})
@@ -39,7 +39,7 @@ class AddAccessInterviewer(Resource):
         session.add(add_access_interviewer)
         session.commit()
 
-        return {"msg": "Successful interviewer access"}
+        return {"msg": "Successful interviewer access"}, 200
 
     @jwt_required
     def delete(self, agency_code, interview_id):
@@ -53,8 +53,8 @@ class AddAccessInterviewer(Resource):
         if access_interviewer:
             session.delete(access_interviewer)
             session.commit()
-            return {"msg": "Successful delete access interviewer"}
+            return {"msg": "Successful delete access interviewer"}, 200
         else:
-            abort(400, "None interviewer")
+            abort(404, "None interviewer")
 
 

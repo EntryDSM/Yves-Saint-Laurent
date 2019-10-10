@@ -30,7 +30,7 @@ class GetQuestionList(Resource):
                            } for question in questions]
                    }, 200
         else:
-            return abort(400, "None Resources")
+            return abort(404, "None Resources")
 
 
 class EvaluationForInterviewee(Resource):
@@ -54,7 +54,7 @@ class EvaluationForInterviewee(Resource):
                         } for evaluation in evaluations]
             }, 200
         else:
-            abort(400, "None Resources")
+            abort(404, "None Resources")
 
     @jwt_required
     def put(self, agency_code, interview_id, student_code):

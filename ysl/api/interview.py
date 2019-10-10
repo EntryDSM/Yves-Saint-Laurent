@@ -25,4 +25,4 @@ class OngoingInterview(Resource):
                            } for interview in ongoing_interviews]
                    }, 200
         else:
-            return abort(400, "None Resources")
+            return abort(404, "None Resources")

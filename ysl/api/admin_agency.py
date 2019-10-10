@@ -23,7 +23,7 @@ class AgencyInformation(Resource):
                     "agency_code": agency.code
                 }, 200
         else:
-            abort(400, "unseen agency")
+            abort(404, "unseen agency")
 
     @jwt_required
     def delete(self, agency_code):
@@ -63,4 +63,4 @@ class ApplyInterviewerList(Resource):
                 } for interviewer in interviewers]
             }, 200
         else:
-            abort(400, "unseen apply interviewer list")
+            abort(404, "unseen apply interviewer list")

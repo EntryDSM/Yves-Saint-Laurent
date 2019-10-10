@@ -45,8 +45,7 @@ class RejectInterviewer(Resource):
         interviewer = request.json["user_email"]
 
         delete_interviewer = session.query(ApplyInterviewer).filter(
-            ApplyInterviewer.agency == agency_code and ApplyInterviewer.interviewer == interviewer
-        ).first()
+            ApplyInterviewer.agency == agency_code).filter(ApplyInterviewer.interviewer == interviewer).first()
 
         if delete_interviewer:
             session.delete(delete_interviewer)

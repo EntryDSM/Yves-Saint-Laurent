@@ -24,7 +24,7 @@ class JoinedAgencyList(Resource):
                 } for agency in agencies]
             }, 200
         else:
-            abort("None Resources", 400)
+            abort("None Resources", 404)
 
 
 class ApplyToAgency(Resource):

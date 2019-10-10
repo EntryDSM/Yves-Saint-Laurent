@@ -85,7 +85,7 @@ class Login(Resource):
                            "refresh": create_refresh_token(identity=email)
                        }, 200
             else:
-                return abort(400, "Check email and password")
+                return abort(404, "Check email and password")
 
         except InvalidRequestError:
             session.rollback()
@@ -108,4 +108,4 @@ class Refresh(Resource):
                 "refresh": create_refresh_token(identity=interviewer.email)
             }, 200
         else:
-            return abort(400, "None Response")
+            return abort(404, "None Response")
