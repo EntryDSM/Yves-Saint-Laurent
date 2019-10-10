@@ -72,6 +72,8 @@ class Login(Resource):
             admin = session.query(Agency).filter(Agency.email == email).first()
             admin_pw_check = check_password_hash(admin.pw, password) if admin else None
 
+            session.close()
+
             if interviewer_qw_check:
                 return {
                            "admin": False,
