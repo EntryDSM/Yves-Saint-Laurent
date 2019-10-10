@@ -25,7 +25,7 @@ class ReadyInterview(Resource):
                     } for interview in ready_interviews]
             }, 200
         else:
-            return abort(400, "None Resources")
+            return abort(404, "None Resources")
 
 
 class DoneInterview(Resource):
@@ -46,5 +46,5 @@ class DoneInterview(Resource):
                            } for interview in done_interviews]
                    }, 200
         else:
-            return abort(400, "None Resources")
+            return abort(404, "None Resources")
 

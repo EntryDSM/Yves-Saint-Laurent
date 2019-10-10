@@ -23,7 +23,7 @@ class SearchInterviewee(Resource):
                        "interviewee_id": interviewee.student_code
                    }, 200
         else:
-            abort(400, "an interviewee without")
+            abort(404, "an interviewee without")
 
 
 class AddInterviewee(Resource):

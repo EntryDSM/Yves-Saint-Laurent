@@ -80,7 +80,7 @@ class CreateQuestion(Resource):
                         } for question in questions]
                    }, 200
         else:
-            return abort(400, "None Resources")
+            return abort(404, "None Resources")
 
     @jwt_required
     def put(self, agency_code, interview_id):
@@ -145,4 +145,4 @@ class InterviewQuestion(Resource):
             return {"msg": "Successful delete question"}
 
         else:
-            return abort(400, "None Resources")
+            return abort(404, "None Resources")
