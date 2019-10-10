@@ -2,6 +2,7 @@ from flask import request, abort
 from flask_restful import Resource
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_refresh_token_required, get_jwt_identity
+from sqlalchemy.exc import InvalidRequestError
 
 from ysl.db import session
 from ysl.db.interviewer import Interviewer
@@ -64,26 +65,30 @@ class Login(Resource):
         email = request.json["email"]
         password = request.json["password"]
 
-        interviewer = session.query(Interviewer).filter(Interviewer.email == email).first()
-        interviewer_qw_check = check_password_hash(interviewer.pw, password) if interviewer else None
+        try:
+            interviewer = session.query(Interviewer).filter(Interviewer.email == email).first()
+            interviewer_qw_check = check_password_hash(interviewer.pw, password) if interviewer else None
 
-        admin = session.query(Agency).filter(Agency.email == email).first()
-        admin_pw_check = check_password_hash(admin.pw, password) if admin else None
+            admin = session.query(Agency).filter(Agency.email == email).first()
+            admin_pw_check = check_password_hash(admin.pw, password) if admin else None
 
-        if interviewer_qw_check:
-            return {
-                        "admin": False,
-                        "access": create_access_token(identity=email),
-                        "refresh": create_refresh_token(identity=email)
-            }, 200
-        elif admin_pw_check:
-            return {
-                       "admin": True,
-                       "access": create_access_token(identity=email),
-                       "refresh": create_refresh_token(identity=email)
-                   }, 200
-        else:
-            return abort(400, "Check email and password")
+            if interviewer_qw_check:
+                return {
+                           "admin": False,
+                           "access": create_access_token(identity=email),
+                           "refresh": create_refresh_token(identity=email)
+                       }, 200
+            elif admin_pw_check:
+                return {
+                           "admin": True,
+                           "access": create_access_token(identity=email),
+                           "refresh": create_refresh_token(identity=email)
+                       }, 200
+            else:
+                return abort(400, "Check email and password")
+
+        except InvalidRequestError:
+            session.rollback()
 
 
 class Refresh(Resource):
