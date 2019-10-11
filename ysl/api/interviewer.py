@@ -83,11 +83,12 @@ class Login(Resource):
             elif admin_pw_check:
                 return {
                            "admin": True,
+                           "agency_code": admin.code,
                            "access": create_access_token(identity=email),
                            "refresh": create_refresh_token(identity=email)
                        }, 200
             else:
-                return abort(404, "Check email and password")
+                return abort(400, "Check email and password")
 
         except InvalidRequestError:
             session.rollback()
