@@ -18,7 +18,7 @@ class AddAccessInterviewer(Resource):
 
         if access_interviewers:
             return {
-                "interviewer": [
+                "interviewers": [
                     {
                         "interviewer_name": interviewer.Interviewer.name,
                         "interviewer_email": interviewer.Interviewer.email
