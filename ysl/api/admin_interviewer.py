@@ -72,4 +72,4 @@ class InterviewerList(Resource):
                     } for interviewer in interviewers]
             }, 200
         else:
-            abort('400', "There is no interviewer who is registered.")
+            abort(404, "There is no interviewer who is registered.")
