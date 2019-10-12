@@ -12,9 +12,13 @@ from ysl.api import check_json
 class JoinedAgencyList(Resource):
     @jwt_required
     def get(self):
-        interviewer = get_jwt_identity()
 
-        agencies = session.query(Belong, Agency).join(Agency).filter(Belong.interviewer == interviewer).all()
+        admin = session.query(Agency).filter(Agency.email == get_jwt_identity()).first()
+
+        if admin:
+            abort(401, "The administrator does not have a subscribed agency.")
+
+        agencies = session.query(Belong, Agency).join(Agency).filter(Belong.interviewer == get_jwt_identity()).all()
 
         if agencies:
             return {"agency": [
