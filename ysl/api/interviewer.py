@@ -84,6 +84,7 @@ class Login(Resource):
                 return {
                            "admin": True,
                            "agency_code": admin.code,
+                           "agency_name": admin.name, 
                            "access": create_access_token(identity=email),
                            "refresh": create_refresh_token(identity=email)
                        }, 200
