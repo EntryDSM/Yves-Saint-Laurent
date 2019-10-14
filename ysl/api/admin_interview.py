@@ -30,7 +30,7 @@ class CreateInterview(Resource):
         session.add(add_interview)
         session.commit()
 
-        return {"msg": "Successful create interview"}, 201
+        return {"interview_id": add_interview.interview_id}, 201
 
 
 class CreateQuestion(Resource):
