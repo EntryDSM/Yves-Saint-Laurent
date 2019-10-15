@@ -33,6 +33,28 @@ class CreateInterview(Resource):
         return {"interview_id": add_interview.interview_id}, 201
 
 
+class EditInterview(Resource):
+    @jwt_required
+    def put(self, agency_code, interview_id):
+        check_admin(agency_code)
+
+        name = request.json["name"]
+        start_date = request.json["start_date"]
+        end_date = request.json["end_date"]
+        interview_explanation = request.json["interview_explanation"]
+
+        interview = session.query(Interview).filter(Interview.interview_id == interview_id).first()
+
+        interview.interview_name = name
+        interview.start_day = start_date
+        interview.end_day = end_date
+        interview.explanation = interview_explanation
+
+        session.commit()
+
+        return {"msg": "successful edit interview"}, 200
+
+
 class CreateQuestion(Resource):
     @jwt_required
     def post(self, agency_code, interview_id):
