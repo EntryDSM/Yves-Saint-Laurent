@@ -4,7 +4,7 @@ from flask_restful import Api
 from ysl.api.admin_agency import AgencyInformation, ApplyInterviewerList
 from ysl.api.admin import AdminSignup
 from ysl.api.interviewer import CheckAgencyCode, InterviewerSignup, Login, Refresh
-from ysl.api.admin_interview import CreateInterview, CreateQuestion, InterviewQuestion
+from ysl.api.admin_interview import CreateInterview, CreateQuestion, InterviewQuestion, EditInterview
 from ysl.api.admin_interivew_list import ReadyInterview, DoneInterview
 from ysl.api.admin_interviewer import AcceptInterviewer, RejectInterviewer, InterviewerList
 from ysl.api.interivew_access import AddAccessInterviewer
@@ -24,6 +24,7 @@ api_admin.add_resource(AdminSignup, "/signup")
 api_admin.add_resource(AgencyInformation, "/agency/<agency_code>")
 api_admin.add_resource(ApplyInterviewerList, "/<agency_code>/interviewer")
 api_admin.add_resource(CreateInterview, "/<agency_code>/interview")
+api_admin.add_resource(EditInterview, "/<agency_code>/<interview_id>")
 api_admin.add_resource(CreateQuestion, "/<agency_code>/<interview_id>/question")
 api_admin.add_resource(InterviewQuestion, "/<agency_code>/<interview_id>/<question_id>")
 api_admin.add_resource(ReadyInterview, "/<agency_code>/ready/interview")
