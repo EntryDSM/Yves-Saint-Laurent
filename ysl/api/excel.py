@@ -1,4 +1,4 @@
-from flask import abort, request
+from flask import abort, request, send_file
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 from openpyxl import load_workbook
@@ -64,4 +64,4 @@ class CreateExcel(Resource):
 
         workbook.save('./static/엔트리2차어드민.xlsx')
 
-        return ""
+        return send_file('./static/엔트리2차어드민.xlsx', mimetype='file/xlsx')
