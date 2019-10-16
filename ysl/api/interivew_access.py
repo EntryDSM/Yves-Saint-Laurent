@@ -1,6 +1,7 @@
 from flask import abort, request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
+from sqlalchemy.exc import InvalidRequestError
 
 from ysl.db import session
 from ysl.db.access import Access
@@ -34,10 +35,20 @@ class AddAccessInterviewer(Resource):
 
         interviewer = request.json["interviewer_email"]
 
-        add_access_interviewer = Access(interview=interview_id, interviewer=interviewer)
+        access_interviewer = session.query(Access).filter(Access.interview == interview_id).filter(
+                              Access.interviewer == interviewer).first()
 
-        session.add(add_access_interviewer)
-        session.commit()
+        if access_interviewer:
+            abort(400, "I'm an interviewer who's already been access")
+
+        try:
+            add_access_interviewer = Access(interview=interview_id, interviewer=interviewer)
+
+            session.add(add_access_interviewer)
+            session.commit()
+
+        except InvalidRequestError:
+            session.rollback()
 
         return {"msg": "Successful interviewer access"}, 200
 
@@ -48,7 +59,7 @@ class AddAccessInterviewer(Resource):
         interviewer = request.json["interviewer_email"]
 
         access_interviewer = session.query(Access).filter(
-            Access.interview == interview_id and Access.interviewer == interviewer).first()
+            Access.interview == interview_id).filter(Access.interviewer == interviewer).first()
 
         if access_interviewer:
             session.delete(access_interviewer)
