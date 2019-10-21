@@ -9,7 +9,7 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=20)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
 
-    DATABASE_URL = os.getenv('DATABASE_URL')
+    DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 class TestConfig(Config):
