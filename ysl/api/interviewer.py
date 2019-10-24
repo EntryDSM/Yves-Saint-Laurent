@@ -2,7 +2,7 @@ from flask import request, abort
 from flask_restful import Resource
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_refresh_token_required, get_jwt_identity
-from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.exc import StatementError
 
 from ysl.db import session
 from ysl.db.interviewer import Interviewer
@@ -91,11 +91,9 @@ class Login(Resource):
             else:
                 return abort(400, "Check email and password")
 
-        except InvalidRequestError:
+        except StatementError:
             session.rollback()
             session.close()
-        finally:
-            session.delete()
 
 
 class Refresh(Resource):
