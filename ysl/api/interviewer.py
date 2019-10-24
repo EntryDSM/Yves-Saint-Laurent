@@ -94,6 +94,8 @@ class Login(Resource):
         except InvalidRequestError:
             session.rollback()
             session.close()
+        finally:
+            session.delete()
 
 
 class Refresh(Resource):
