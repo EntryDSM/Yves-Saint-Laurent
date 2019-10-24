@@ -94,6 +94,7 @@ class Login(Resource):
         except StatementError:
             session.rollback()
             session.close()
+            return abort(500, "db transaction error")
 
 
 class Refresh(Resource):
